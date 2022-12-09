@@ -1,7 +1,7 @@
 # 向量分子检索
 
 ## 前提
-1. TairMolSearch 引用外部2个git工程, 需要提前下载 [引用详情](.gitmodules)
+1. TairMolSearch 引用外部1个git工程, 需要提前下载 [引用详情](.gitmodules)
     - git submodule init
     - git submodule update
 

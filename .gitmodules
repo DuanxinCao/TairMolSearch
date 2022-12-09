@@ -1,0 +1,3 @@
+[submodule "webclient/molview"]
+	path = webclient/molview
+	url = https://github.com/molview/molview.git
