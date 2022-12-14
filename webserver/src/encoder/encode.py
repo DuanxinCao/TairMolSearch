@@ -14,4 +14,10 @@ def smiles_to_vec(smiles):
     hex_fp = DataStructs.BitVectToFPSText(fp)
     # print(hex_fp)
     vec = bytes.fromhex(hex_fp)
-    return list(vec)
+    # print (vec)
+    vec_list = list(vec)
+    vector = []
+    for v in vec_list:
+        tmp = [1 if ((1 << (7 - i)) & v) else 0 for i in range(8)]
+        vector.append(tmp)
+    return vector

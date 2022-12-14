@@ -4,11 +4,13 @@ import sys
 from rdkit import DataStructs
 from rdkit import Chem
 import redis
-from tair_vector import TairVector
+import os
+from tair import Tair
+from tair.tairvector import DataType,DistanceMetric,Constants,TairVectorIndex
 
-SERVER_ADDR = "127.0.0.1"
-SERVER_PORT = 6379
-VECTOR_DIMENSION = 64
+SERVER_ADDR = os.getenv("TAIR_VECTOR_HOST", "127.0.0.1")
+SERVER_PORT = os.getenv("TAIR_VECTOR_PORT", 6379)
+VECTOR_DIMENSION = 64*8
 index_name = "molsearch"
 
 
@@ -20,7 +22,12 @@ def smiles_to_vec(smiles):
     # print(hex_fp)
     vec = bytes.fromhex(hex_fp)
     #print (vec)
-    return list(vec)
+    vec_list = list(vec)
+    vector = []
+    for v in vec_list:
+        tmp = [1 if ((1 << (7 - i)) & v) else 0 for i in range(8)]
+        vector.append(tmp)
+    return vector
 
 
 def get_feature_from_file(filepath):
@@ -61,10 +68,10 @@ def do_load(file_path):
     vectors, names, ids = feature_extract(file_path)
     print("-----len of vectors:",len(vectors))
 
-    client = TairVector(redis.Redis(SERVER_ADDR, SERVER_PORT))
+    client = Tair(redis.Redis(SERVER_ADDR, SERVER_PORT))
 
     if client is not None:
-        index = client.get_index(str(index_name))
+        index = client.tvs_get_index(str(index_name))
         print ('index', index, type(index))
         if index is None:
             param = {
@@ -72,7 +79,7 @@ def do_load(file_path):
             'ef_construct': 200,
             'max_elements': 20000,
             }
-            ret = client.create_index(index_name, VECTOR_DIMENSION, **param)
+            ret = client.tvs_create_index(index_name, VECTOR_DIMENSION,distance_type=DistanceMetric.Jaccard,data_type=DataType.Binary **param)
             if not ret:
                 print ("create vector index error")
                 sys.exit(2)
@@ -81,7 +88,7 @@ def do_load(file_path):
         while idx<len(vectors) :
             attribute = {'smiles': names[idx]}
             try:
-                ret = client.hset(index_name, str(ids[idx]), vectors[idx], **attribute)
+                ret = client.tvs_hset(index_name, str(ids[idx]), vectors[idx], **attribute)
             except:
                 print ("hset %s error" % idx[idx])
             idx += 1

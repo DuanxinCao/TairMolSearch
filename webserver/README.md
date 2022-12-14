@@ -38,7 +38,7 @@
 ## how to use
 
 ### tairv4 vector search
-- star tair vector server
+- start tair vector server
   
 ### webserver && webclient
 
@@ -53,7 +53,7 @@
 
 4. visit webclient  http://127.0.0.1:8001/
 
-### inseart_data to tair vector
+### insert_data to tair vector
 
 1. step into webserver container
     - docker exec -it `docker ps -a |grep tair-molserver |awk '{print $1}'` bash

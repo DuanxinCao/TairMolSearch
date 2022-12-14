@@ -4,7 +4,7 @@ import redis
 from tair.tairvector import TairVectorCommands as TairVector
 from tair import Tair
 
-client = Tair(host=TAIR_VECTOR_HOST, port=TAIR_VECTOR_PORT)
+client = Tair(host=TAIR_VECTOR_HOST, port=TAIR_VECTOR_PORT,password=TAIR_PASSWOED)
 
 def tair_vector_client():
     try:
