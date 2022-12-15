@@ -11,9 +11,9 @@ def do_search(index_name, molecular_name, top_k):
         feat = smiles_to_vec(molecular_name)
         result = knn_search(index_client, index_name, feat, top_k)
         res_smi = []
-        for k,v in result.items():
+        for k,v in result:
             smile = get_attr(index_client, index_name, k, 'smiles')
-            res_smi.append(smile[0].decode("utf-8"))
+            res_smi.append(smile[0])
         return res_smi
 
     except Exception as e:

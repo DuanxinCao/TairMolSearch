@@ -2,7 +2,7 @@ import os
 
 TAIR_VECTOR_HOST = os.getenv("TAIR_VECTOR_HOST", "127.0.0.1")
 TAIR_VECTOR_PORT = os.getenv("TAIR_VECTOR_PORT", 6379)
-TAIR_PASSWOED = os.getenv("TAIR_VECTOR_PORT","default")
+TAIR_PASSWOED = os.getenv("TAIR_VECTOR_PASSWORD","default")
 
 VECTOR_DIMENSION = os.getenv("VECTOR_DIMENSION", 64)
 NUM = os.getenv("TOPK_NUM", 10)

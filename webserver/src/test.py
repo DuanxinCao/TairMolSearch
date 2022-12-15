@@ -15,7 +15,7 @@ def do_test():
     result = knn_search(client, DEFULT_INDEX, feat, 10)
     print ('result', result, type(result))
     
-    for key,dis in result.items():
+    for key,dis in result:
         smile = client.hmget(DEFULT_INDEX, key, 'smiles')[0].decode("utf-8")
         print (key, dis, smile)
 

@@ -18,7 +18,7 @@ def tair_vector_client():
 
 def knn_search(client, index_name, vectors, top_k):
     try:
-        result = client.tvs_knnsearch(index_name,top_k, vectors)
+        result = client.tvs_knnsearch(index_name,top_k, vectors,is_binary=True)
         return result
     except Exception as e:
         print("TairVector Search ERROR:", e)

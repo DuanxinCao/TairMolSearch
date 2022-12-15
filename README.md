@@ -9,7 +9,7 @@
 
 1. 启动 tair-vector 服务 $VECTOR_HOST  $VECTOR_PORT
 2. 启动 tair-molserver 镜像的服务
-    docker run -td -p 35001:5000 -e "TAIR_VECTOR_HOST=$VECTOR_HOST" -e "TAIR_VECTOR_PORT=$VECTOR_PORT" reg.docker.alibaba-inc.com/graphdb/tair-molserver:1.0.0
+    docker run -td -p 35001:5000 -e "TAIR_VECTOR_HOST=$VECTOR_HOST" -e "TAIR_VECTOR_PORT=$VECTOR_PORT" -e "TAIR_VECTOR_PASSWORD=$VECTOR_PASSWORD" tair-molserver:1.1.0
 3. 进入 tair-molserver 灌数据 (1w分子结构数据)
     docker exec -it `docker ps -a |grep tair-molserver |awk '{print $1}'` bash
     cd script && python3.7 insert_data.py -f test_1w.smi

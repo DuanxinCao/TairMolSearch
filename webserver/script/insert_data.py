@@ -10,10 +10,11 @@ from tair.tairvector import DataType,DistanceMetric,Constants,TairVectorIndex
 
 SERVER_ADDR = os.getenv("TAIR_VECTOR_HOST", "127.0.0.1")
 SERVER_PORT = os.getenv("TAIR_VECTOR_PORT", 6379)
-PASSWORD = os.getenv("TAIR_VECTOR_PORT","default")
+PASSWORD = os.getenv("TAIR_VECTOR_PASSWORD","default")
 
-VECTOR_DIMENSION = 64*8
-index_name = "molsearch"
+VECTOR_DIMENSION = os.getenv("VECTOR_DIMENSION", 64)
+NUM = os.getenv("TOPK_NUM", 10)
+DEFULT_INDEX = os.getenv("DEFULT_INDEX", "molsearch")
 
 
 def smiles_to_vec(smiles):
@@ -28,7 +29,7 @@ def smiles_to_vec(smiles):
     vector = []
     for v in vec_list:
         tmp = [1 if ((1 << (7 - i)) & v) else 0 for i in range(8)]
-        vector.append(tmp)
+        vector.extend(tmp)
     return vector
 
 
@@ -73,7 +74,7 @@ def do_load(file_path):
     client = Tair(SERVER_ADDR, SERVER_PORT,password=PASSWORD)
 
     if client is not None:
-        index = client.tvs_get_index(str(index_name))
+        index = client.tvs_get_index(str(DEFULT_INDEX))
         print ('index', index, type(index))
         if index is None:
             param = {
@@ -81,7 +82,7 @@ def do_load(file_path):
             'ef_construct': 200,
             'max_elements': 20000,
             }
-            ret = client.tvs_create_index(index_name, VECTOR_DIMENSION,distance_type=DistanceMetric.Jaccard,data_type=DataType.Binary **param)
+            ret = client.tvs_create_index(DEFULT_INDEX, VECTOR_DIMENSION*8,distance_type=DistanceMetric.Jaccard,data_type=DataType.Binary, **param)
             if not ret:
                 print ("create vector index error")
                 sys.exit(2)
@@ -90,7 +91,7 @@ def do_load(file_path):
         while idx<len(vectors) :
             attribute = {'smiles': names[idx]}
             try:
-                ret = client.tvs_hset(index_name, str(ids[idx]), vectors[idx], **attribute)
+                ret = client.tvs_hset(DEFULT_INDEX, str(ids[idx]), vectors[idx], is_binary=True,**attribute)
             except:
                 print ("hset %s error" % idx[idx])
             idx += 1
