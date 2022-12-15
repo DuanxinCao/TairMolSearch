@@ -7,3 +7,4 @@ futures==3.1.1
 PubChemPy
 psycopg2-binary
 tair==1.3
+redis

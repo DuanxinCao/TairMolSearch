@@ -10,6 +10,8 @@ from tair.tairvector import DataType,DistanceMetric,Constants,TairVectorIndex
 
 SERVER_ADDR = os.getenv("TAIR_VECTOR_HOST", "127.0.0.1")
 SERVER_PORT = os.getenv("TAIR_VECTOR_PORT", 6379)
+PASSWORD = os.getenv("TAIR_VECTOR_PORT","default")
+
 VECTOR_DIMENSION = 64*8
 index_name = "molsearch"
 
@@ -68,7 +70,7 @@ def do_load(file_path):
     vectors, names, ids = feature_extract(file_path)
     print("-----len of vectors:",len(vectors))
 
-    client = Tair(redis.Redis(SERVER_ADDR, SERVER_PORT))
+    client = Tair(SERVER_ADDR, SERVER_PORT,password=PASSWORD)
 
     if client is not None:
         index = client.tvs_get_index(str(index_name))
